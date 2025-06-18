@@ -13,13 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
 let server;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    server = app_1.default.listen(PORT, () => {
-        console.log(`Server is running on port http://localhost:${PORT}`);
-    });
     try {
+        yield mongoose_1.default.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.lbzm3xv.mongodb.net/advance-note-app?retryWrites=true&w=majority&appName=Cluster0`);
+        console.log('Connect mongodb database using mongoose');
+        server = app_1.default.listen(PORT, () => {
+            console.log(`Server is running on port http://localhost:${PORT}`);
+        });
     }
     catch (error) {
         console.log(error);

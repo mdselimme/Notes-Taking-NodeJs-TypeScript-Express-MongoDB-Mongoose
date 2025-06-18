@@ -2,6 +2,7 @@ import { Model, model, Schema } from "mongoose";
 import { IUAddress, IUser, UserInstanceMethods, UserStaticsMethod } from "../interfaces/user.interface";
 import bcrypt from 'bcrypt'
 import validator from 'validator';
+import Note from "./notes.model";
 
 
 const addressSchema = new Schema<IUAddress>({
@@ -76,6 +77,25 @@ userSchema.static("hashPassword", async function hashPassword(plainPassword: str
     return password;
 })
 
+userSchema.pre("save", async function (next) {
+    this.password = await bcrypt.hash(this.password, 10);
+    next()
+})
+
+userSchema.post("findOneAndDelete", async function (doc, next) {
+    if (doc) {
+        await Note.deleteMany({ user: doc._id });
+    }
+    next()
+})
+
+userSchema.pre("find", function (next) {
+    next();
+})
+
+userSchema.post("save", async function (doc) {
+    console.log(`${doc.email} has been saved.`)
+})
 
 const Users = model<IUser, UserStaticsMethod>('Users', userSchema);
 
