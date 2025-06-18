@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Router } from 'express';
 import Note from '../models/notes.model';
-const notesRouter = express.Router();
+const notesRouter: Router = express.Router();
 
 
 
