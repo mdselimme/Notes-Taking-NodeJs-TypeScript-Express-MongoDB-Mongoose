@@ -30,10 +30,10 @@ notesRouter.post('/create-note', async (req: Request, res: Response) => {
 });
 
 
-notesRouter.get('/notes', async (req: Request, res: Response) => {
+notesRouter.get('/', async (req: Request, res: Response) => {
     try {
 
-        const notes = await Note.find();
+        const notes = await Note.find().populate("user");
 
         res.status(201).json({
             success: true,

@@ -1,6 +1,14 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "../interfaces/user.interface";
+import { IUAddress, IUser } from "../interfaces/user.interface";
 import validator from 'validator';
+
+
+const addressSchema = new Schema<IUAddress>({
+    city: String,
+    street: String,
+    zip: Number
+}, { _id: false })
+
 
 const userSchema = new Schema<IUser>({
     firstName: {
@@ -50,8 +58,12 @@ const userSchema = new Schema<IUser>({
             message: "Role is not valid. got value {VALUE}"
         },
         default: "USER"
+    },
+    address: {
+        type: addressSchema,
+        required: true
     }
-});
+}, { versionKey: false, timestamps: true });
 
 const Users = model('Users', userSchema);
 
