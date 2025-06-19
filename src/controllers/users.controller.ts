@@ -41,7 +41,15 @@ usersRouter.post('/create-user', async (req: Request, res: Response) => {
 // Get All Users 
 usersRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const usersData = await Users.find({});
+        const userEmail = req.query.email;
+        // const usersData = await Users.find({}).sort({ email: -1 });
+        // const usersData = await Users.find({}).limit(1);
+        let usersData;
+        if (userEmail) {
+            usersData = await Users.find({ email: userEmail }).skip(1);
+        }
+        usersData = await Users.find({}).skip(1);
+
         res.status(201).send({ message: "Users data", success: true, usersData })
     } catch (error) {
         if (error instanceof Error) {
