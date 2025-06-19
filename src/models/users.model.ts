@@ -65,7 +65,12 @@ const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethods>({
         type: addressSchema,
         required: true
     }
-}, { versionKey: false, timestamps: true });
+}, {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
 
 userSchema.method("hashPassword", async function hashPassword(plainPassword: string) {
     const password = await bcrypt.hash(plainPassword, 10);
@@ -94,7 +99,11 @@ userSchema.pre("find", function (next) {
 })
 
 userSchema.post("save", async function (doc) {
-    console.log(`${doc.email} has been saved.`)
+    console.log(`${doc.email} has been saved.`);
+})
+
+userSchema.virtual('fullName').get(function () {
+    return `${this.firstName} ${this.lastName}`
 })
 
 const Users = model<IUser, UserStaticsMethod>('Users', userSchema);

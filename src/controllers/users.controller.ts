@@ -17,7 +17,7 @@ const CreateUserZodSchema = z.object({
     })
 });
 
-// Creat An User 
+// Create An User 
 usersRouter.post('/create-user', async (req: Request, res: Response) => {
     try {
         const userBody = req.body;
@@ -37,6 +37,19 @@ usersRouter.post('/create-user', async (req: Request, res: Response) => {
         }
     }
 });
+
+// Get All Users 
+usersRouter.get('/', async (req: Request, res: Response) => {
+    try {
+        const usersData = await Users.find({});
+        res.status(201).send({ message: "Users data", success: true, usersData })
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(400).json({ message: error.message })
+        }
+    }
+})
+
 
 // Delete An User 
 usersRouter.delete('/delete-user/:userId', async (req: Request, res: Response) => {
